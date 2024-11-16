@@ -13,11 +13,9 @@ class BilingualDataset(Dataset):
         self.tokenizer_tgt = tokenizer_tgt
         self.src_lang = src_lang
         self.tgt_lang = tgt_lang
-        # method to get the token fot the given sentence 
+
         self.sos_token = torch.tensor([tokenizer_tgt.token_to_id("[SOS]")], dtype=torch.int64)
         self.eos_token = torch.tensor([tokenizer_tgt.token_to_id("[EOS]")], dtype=torch.int64)
-        # Padding token to add to add to the sentence if it is shorter than the sequence length
-        # because the model expects all sequences to be of the fixed length
         self.pad_token = torch.tensor([tokenizer_tgt.token_to_id("[PAD]")], dtype=torch.int64)
 
     def __len__(self):
@@ -86,8 +84,7 @@ class BilingualDataset(Dataset):
             "src_text": src_text,
             "tgt_text": tgt_text,
         }
-# Basically each word see it at a point in time, it can only see the words that come before it 
+    
 def causal_mask(size):
-    # "triu" it basically gives all the value above the diagonal as 1 and the rest as 0
     mask = torch.triu(torch.ones((1, size, size)), diagonal=1).type(torch.int)
     return mask == 0
